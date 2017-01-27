@@ -1,5 +1,152 @@
 # Overview
 
+This describes the basics of Gifly API V1 resource.
+
+* [Current Version](https://github.com/gifly/gifly_project/blob/master/docs/apis/v1/overview.md#current-version)
+* [Schema](https://github.com/gifly/gifly_project/blob/master/docs/apis/v1/overview.md#schema)
+* [Client Errors](https://github.com/gifly/gifly_project/blob/master/docs/apis/v1/overview.md#client-errors)
+* [HTTP Verbs](https://github.com/gifly/gifly_project/blob/master/docs/apis/v1/overview.md#http-verbs)
+
+
+## Current Version
+The default version of the current Gifly API is V1.
+
+## Schema
+
+All the APIs must access to https://api.gifly.jp.
+The data format is JSON.
+
+```
+curl -i https://api.gifly.jp/v1/searches?tags=foobar
+
+HTTP/1.1 200 OK
+Server: nginx
+Date: Fri, 12 Oct 2012 23:33:14 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+Status: 200 OK
+ETag: "a00049ba79152d03380c34652f2cb612"
+X-Gifly-Media-Type: gifly.v1
+
+Content-Length: 100
+Cache-Control: max-age=0, private, must-revalidate
+```
+
+All the timestamps are returned in the ISO 8601 format.
+```
+YYYY-MM-DDTHH:MM:SSZ
+```
+
+## Client Errors
+
+In case of the client error, the status code 400 is returned.
+
+#### Main causes of the error 400
+* Broken JSON was sent. (Parse Error)(Parse Error)
+* Invalid JSON value was sent. (Validation Error) Example: More than 5 tags were sent in searchs api.
+
+### Error format
+
+Only one following type is currently available. 
+
+```
+HTTP/1.1 400 Bad Request
+Content-Length: 38
+
+{"message":"here is an error message"}
+```
+
+
+## HTTP Verbs
+
+| Name | Description |
+|:-----------|:------------|
+|GET	|	Used for searching/retrieving a resource.|
+|POST	|	Used for creating a resource.|
+|PATCH	|Used for modifying a part of a resource.|
+|PUT	|	Used for replaying a resource or a collection.|
+|DELETE	|Used for deleting a resource.|
+
+
+## Authentication
+Authentication is not currently supported.
+
+
+# GIF Search API
+
+
+## List Searched Gifs
+
+Returns a GIFs List matched to the search query as a response.
+
+```
+GET /searches
+```
+
+### Parameters
+
+| Name | Type | Description |
+|:-----------|:------------|:------------|
+| tags       |  array of string   |  Input a complete tag name.You can search multiple tags separated by commas. (Up to 5) (Cannot be used together with *q.)|
+| q    |  string     |  Input a URLEncoded search keyword.<br>This keyword works as a tag prefix search.<br> Gifly allows the use of hiragana or katakana to search for a tag including alphabets or Chinese characters.<br> (Example: A GIF including a tag such as ‘Star Wars’ or ‘Star trek’ can be searched by q=star.(Cannot be used together with *tags.)<br><br> Advanced search<br>・OR search: can be done by connecting keywords using +OR+ (E.g. q=a+OR+b)|
+| page      | integer | Page number |
+
+
+[](
+| sort      | integer | The key used for sorting.<br><br>List of available keys<br>・score<br>・created_at |
+| direction | string  | Specify sort order from `asc` or` desc`.
+)
+
+
+### Response
+
+
+#### Example
+```
+curl -H 'Accept: application/json;' https://api.gifly.jp/v1/searches?q=shark&page=2
+```
+
+```
+Status: 200 OK
+```
+```json
+{
+  "total_count": 2,
+  "items": [
+    {
+      "id": "d25e5b51-7d9f-11e6-b2e3-6d612654d530",
+      "user_id": 1,
+      "image": "https://gifly.jp/gifs/96504291-9929-11e6-aee9-dfdc2f6b25ef",
+      "poster_image": {
+        "large":"https://cdn.gifly.jp/gif_poster_images/96504291-9929-11e6-aee9-dfdc2f6b25ef/large/966d8e90-9929-11e6-aee9-dfdc2f6b25ef.jpg",
+        "medium":"https://cdn.gifly.jp/gif_poster_images/96504291-9929-11e6-aee9-dfdc2f6b25ef/medium/966d8e90-9929-11e6-aee9-dfdc2f6b25ef.jpg",
+        "small":"https://cdn.gifly.jp/gif_poster_images/96504291-9929-11e6-aee9-dfdc2f6b25ef/small/966d8e90-9929-11e6-aee9-dfdc2f6b25ef.jpg",
+        "square":"https://cdn.gifly.jp/gif_poster_images/96504291-9929-11e6-aee9-dfdc2f6b25ef/square/966d8e90-9929-11e6-aee9-dfdc2f6b25ef.jpg"
+      },
+      "poster_image_content_type": "image\/jpeg",
+      "category_id": 1,
+      "child_category_id": 1,
+      "source_url": "https:\/\/www.youtube.com\/watch?v=foobar",
+      "duration": 3,
+      "created_at": "2016-09-18T13:00:09.000Z",
+      "updated_at": "2016-09-18T13:00:09.000Z",
+      "tags": [
+        {
+          "id": 1,
+          "name": "shark"
+        },
+        {
+          "id": 2,
+          "name": "planet"
+        }
+      ]
+    }
+  ]
+}
+```
+
+# Overview
+
 ここでは、Gifly API V1リソースに関する基本的なことを記載しています。
 
 * [Current Version](https://github.com/gifly/gifly_project/blob/master/docs/apis/v1/overview.md#current-version)
